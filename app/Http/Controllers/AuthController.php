@@ -13,21 +13,17 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
-            'phone'    => 'required|string|unique:users,phone',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'role'     => 'required|string|exists:roles,name',
-            'address'  => 'nullable|string|max:255',
         ]);
 
         try {
             $user = User::create([
                 'name'     => $validated['name'],
-                'phone'    => $validated['phone'],
                 'email'    => $validated['email'],
                 'password' => bcrypt($validated['password']),
                 'role'     => $validated['role'],
-                'address'  => $validated['address'] ?? null,
             ]);
 
             $token = $user->createToken('auth_token')->plainTextToken;

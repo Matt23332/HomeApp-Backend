@@ -17,12 +17,16 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'confirm_password' => 'required|string|same:password',
+            'role' => 'required|string|exists:roles,name',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => bcrypt($validated['password']),
+            'confirm_password' => bcrypt($validated['confirm_password']),
+            'role' => $validated['role'],
         ]);
 
         return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
@@ -40,6 +44,7 @@ class UserController extends Controller
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'sometimes|required|string|min:8',
+            'role' => 'sometimes|required|string|exists:roles,name',
         ]);
 
         if (isset($validated['password'])) {
