@@ -7,6 +7,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\BillController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ShoppingItemController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ResendEmailVerificationController;
 
 Route::resource('users', UserController::class);
 Route::post('/register', [AuthController::class, 'register']);
@@ -14,10 +17,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('bills', BillController::class);
 Route::apiResource('payments', PaymentController::class);
+Route::apiResource('shopping-items', ShoppingItemController::class);
+Route::apiResource('expenses', ExpenseController::class);
+Route::post('/resend-verification-email', [ResendEmailVerificationController::class, 'resend']);
 
 Route::middleware('auth:sanctum')->group(function () {
     // Route::apiResource('roles', RoleController::class);
     // Route::apiResource('bills', BillController::class);
     // Route::apiResource('payments', PaymentController::class);
-    Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });

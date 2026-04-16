@@ -15,8 +15,9 @@ class ShoppingItemController extends Controller
     public function store(Request $request) {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
             'quantity' => 'required|integer',
-            'purchased' => 'required|boolean',
+            'status' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
         ]);
 
@@ -35,7 +36,8 @@ class ShoppingItemController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'quantity' => 'sometimes|required|integer',
-            'purchased' => 'sometimes|required|boolean',
+            'price' => 'sometimes|required|numeric',
+            'status' => 'sometimes|required|string|max:255',
             'user_id' => 'sometimes|required|exists:users,id',
         ]);
 
