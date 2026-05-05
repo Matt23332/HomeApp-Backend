@@ -11,21 +11,36 @@ use App\Http\Controllers\ShoppingItemController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ResendEmailVerificationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\DashboardController;
 
-Route::resource('users', UserController::class);
+// Public API routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::apiResource('roles', RoleController::class);
-Route::apiResource('bills', BillController::class);
-Route::apiResource('payments', PaymentController::class);
-Route::apiResource('shopping-items', ShoppingItemController::class);
-Route::apiResource('expenses', ExpenseController::class);
 Route::post('/resend-verification-email', [ResendEmailVerificationController::class, 'resend']);
-Route::get('/reports/monthly', [ReportController::class, 'monthly']);
 
+// Protected API routes
 Route::middleware('auth:sanctum')->group(function () {
-    // Route::apiResource('roles', RoleController::class);
-    // Route::apiResource('bills', BillController::class);
-    // Route::apiResource('payments', PaymentController::class);
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
+
+    // User management
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('roles', RoleController::class);
+
+    // Bills and payments
+    Route::apiResource('bills', BillController::class);
+    Route::patch('/bills/{bill}/pay', [BillController::class, 'markAsPaid']);
+    Route::apiResource('payments', PaymentController::class);
+
+    // Shopping and expenses
+    Route::apiResource('shopping-items', ShoppingItemController::class);
+    Route::apiResource('expenses', ExpenseController::class);
+    Route::get('/expenses/summary', [ExpenseController::class, 'summary']);
+
+    // Reports
+    Route::get('/reports/expenses', [ReportController::class, 'expenseReport']);
+    Route::get('/reports/monthly', [ReportController::class, 'monthlyReport']);
+
+    // Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 });

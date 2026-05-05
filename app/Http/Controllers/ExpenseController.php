@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Expense;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseController extends Controller
 {
@@ -49,6 +50,31 @@ class ExpenseController extends Controller
         $expense = Expense::findOrFail($id);
         $expense->delete();
         return response()->json(['message' => 'Expense deleted successfully'], 200);
+    }
+
+    public function summary(Request $request) {
+        $user = $request->user();
+        $period = $request->get('period', 'monthly');
+
+        switch($period) {
+            case 'weekly':
+                $startDate = now()->startOfWeek();
+                break;
+            case 'yearly':
+                $startDate = now()->startOfYear();
+                break;
+            default:
+                $startDate = now()->startOfMonth();
+                break;
+        }
+
+        $expenses = Expense::where('user_id', $user->id)
+            ->where('expense_date', '>=', $startDate)
+            ->select('category', DB::raw('SUM(amount) as total'))
+            ->groupBy('category')
+            ->get();
+
+        return response()->json(['message' => 'Expense summary retrieved successfully', 'data' => $expenses], 200);
     }
 
 }
