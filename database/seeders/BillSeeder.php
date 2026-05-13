@@ -15,28 +15,28 @@ class BillSeeder extends Seeder
     {
         $bills = [
             [
-                'title' => 'Electricity Bill',
+                'name' => 'Electricity Bill',
                 'amount' => 100.50,
                 'due_date' => '2024-07-15',
                 'user_id' => 1,
             ],
             [
-                'title' => 'Water Bill',
+                'name' => 'Water Bill',
                 'amount' => 30.75,
                 'due_date' => '2024-07-20',
                 'user_id' => 1,
             ],
             [
-                'title' => 'Internet Bill',
+                'name' => 'Internet Bill',
                 'amount' => 50.00,
                 'due_date' => '2024-07-25',
-                'user_id' => 2,
+                'user_id' => 1,
             ],
         ];
 
         foreach ($bills as $bill) {
             Bill::firstOrCreate(
-                ['title' => $bill['title'], 'user_id' => $bill['user_id']],
+                ['name' => $bill['name'], 'user_id' => $bill['user_id']],
                 [
                     'amount' => $bill['amount'],
                     'due_date' => $bill['due_date'],

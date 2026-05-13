@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bill;
+use Illuminate\Support\Facades\Auth;
 
 class BillController extends Controller
 {
@@ -14,12 +15,12 @@ class BillController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'due_date' => 'required|date',
-            'user_id' => 'required|exists:users,id',
         ]);
 
+        $validated['user_id'] = Auth::id();
         $bill = Bill::create($validated);
         return response()->json(['message' => 'Bill created successfully', 'data' => $bill], 201);
     }
@@ -31,12 +32,10 @@ class BillController extends Controller
 
     public function update(Request $request, $id) {
         $bill = Bill::findOrFail($id);
-
         $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
+            'name' => 'sometimes|required|string|max:255',
             'amount' => 'sometimes|required|numeric',
             'due_date' => 'sometimes|required|date',
-            'user_id' => 'sometimes|required|exists:users,id',
         ]);
 
         $bill->update($validated);

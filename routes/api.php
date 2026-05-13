@@ -23,9 +23,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'getDashboardData']);
 
-    // User management
+    // User management - Admin only
     Route::apiResource('users', UserController::class);
     Route::apiResource('roles', RoleController::class);
+
+    // User profile
+    Route::get('/user', [UserController::class, 'profile']);
+    Route::put('/user', [UserController::class, 'updateProfile']);
+    Route::post('/change-password', [UserController::class, 'changePassword']);
+    Route::delete('/delete-account', [UserController::class, 'deleteAccount']);
 
     // Bills and payments
     Route::apiResource('bills', BillController::class);

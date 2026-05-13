@@ -45,7 +45,21 @@ class User extends Authenticatable
         'password' => 'hashed'
     ];
 
-    
+    public function expenses() {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function bills() {
+        return $this->hasMany(Bill::class);
+    }
+
+    public function payments() {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function shoppingItems() {
+        return $this->hasMany(ShoppingItem::class);
+    }
 
     public function isAdmin() {
         return $this->role === 'Admin';
