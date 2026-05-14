@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ShoppingItem;
+use Illuminate\Support\Facades\Auth;
 
 class ShoppingItemController extends Controller
 {
@@ -18,9 +19,9 @@ class ShoppingItemController extends Controller
             'price' => 'required|numeric',
             'quantity' => 'required|integer',
             'status' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
         ]);
 
+        $validated['user_id'] = Auth::id();
         $item = ShoppingItem::create($validated);
         return response()->json(['message' => 'Shopping item created successfully', 'data' => $item], 201);
     }
@@ -38,9 +39,9 @@ class ShoppingItemController extends Controller
             'quantity' => 'sometimes|required|integer',
             'price' => 'sometimes|required|numeric',
             'status' => 'sometimes|required|string|max:255',
-            'user_id' => 'sometimes|required|exists:users,id',
         ]);
 
+        $validated['user_id'] = Auth::id();
         $item->update($validated);
         return response()->json(['message' => 'Shopping item updated successfully', 'data' => $item], 200);
     }
